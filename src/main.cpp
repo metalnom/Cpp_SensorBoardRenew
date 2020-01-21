@@ -4,7 +4,6 @@
 #include <MySQL_Connection.h>
 #include <MySQL_Cursor.h>
 
-byte mac_addr[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
 IPAddress server_addr(192,168,10,156);
 char user[] = "node";
 char password[] = "node";
