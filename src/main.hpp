@@ -5,6 +5,7 @@
 #include <MySQL_Cursor.h>
 #include <Wire.h>
 #include <BH1750.h>
+#include <Adafruit_BMP085.h>
 
 IPAddress server_addr(192,168,10,156);
 char user[] = "node";
@@ -18,8 +19,11 @@ WiFiClient client;
 MySQL_Connection conn((Client *)&client);
 MySQL_Cursor* cursor;
 
-BH1750 lightMeter(0x23);
-float lux = 0.0;
+BH1750 LightSensor(0x23);
+float light = 0.0;
+
+Adafruit_BMP085 PressureSensor;
+float pressure = 0.0;
 
 void wifi_set(void);
 void getTextTime(time_t now);

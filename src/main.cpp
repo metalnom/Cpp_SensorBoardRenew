@@ -3,7 +3,8 @@
 void setup() {
   Serial.begin(9600);
   Wire.begin();
-  lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE);
+  LightSensor.begin(BH1750::CONTINUOUS_HIGH_RES_MODE);
+  PressureSensor.begin();
   wifi_set();
   configTime(9 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 }
@@ -12,8 +13,10 @@ void loop() {
   delay(3000);
   time_t now = time(nullptr);
   getTextTime(now);
-  lux = lightMeter.readLightLevel();
-  Serial.println(lux);
+  light = LightSensor.readLightLevel();
+  pressure = PressureSensor.readPressure();
+  Serial.println(light);
+  Serial.println(pressure);
   // cursor->execute(INSERT_SQL); 
 }
 
