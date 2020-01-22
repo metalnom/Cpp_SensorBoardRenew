@@ -1,26 +1,9 @@
-#include <Arduino.h>
-#include <time.h>
-#include <ESP8266WiFi.h>
-#include <MySQL_Connection.h>
-#include <MySQL_Cursor.h>
-
-IPAddress server_addr(192,168,10,156);
-char user[] = "node";
-char password[] = "node";
-char INSERT_SQL[] = "insert into test.hello (message) values ('hello')";
-
-char ssid[] = "iptime";
-char pwd[] = "";
-
-WiFiClient client;
-MySQL_Connection conn((Client *)&client);
-MySQL_Cursor* cursor;
-
-void wifi_set(void);
-void getTextTime(time_t now);
+#include "main.hpp"
 
 void setup() {
   Serial.begin(9600);
+  Wire.begin();
+  lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE);
   wifi_set();
   configTime(9 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 }
@@ -29,8 +12,11 @@ void loop() {
   delay(3000);
   time_t now = time(nullptr);
   getTextTime(now);
-  cursor->execute(INSERT_SQL); 
+  lux = lightMeter.readLightLevel();
+  Serial.println(lux);
+  // cursor->execute(INSERT_SQL); 
 }
+
 
 void wifi_set(void) {
   Serial.printf("\nConnecting to %s", ssid);
