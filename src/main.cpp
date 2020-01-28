@@ -11,7 +11,7 @@ void setup() {
 }
 
 void loop() {
-  delay(30000);
+  delay(30000);     // 데이터베이스 업데이트 주기
   time_t now = time(nullptr);
   light = LightSensor.readLightLevel();
   pressure = PreTemSensor.readPressure();
@@ -19,10 +19,12 @@ void loop() {
   humidity = HumiditySensor.readHumidity();
   console_print(now);
   insert_mod();
-  Serial.println(INSERT_SQL);
-  // cursor->execute(INSERT_SQL); 
+  // Serial.println(INSERT_SQL);
+  cursor->execute(INSERT_SQL); 
 }
 
+
+// 함수 정의부
 
 void wifi_set(void) {
   Serial.printf("\nConnecting to %s", ssid);
@@ -70,6 +72,6 @@ void console_print(time_t t) {
 }
 
 void insert_mod() {
-  sprintf(INSERT_val, "( %s, %.2f, %.2f, %.2f, %.2f )", mac, light, pressure, temperature, humidity);
+  sprintf(INSERT_val, "( '%s', %.2f, %.2f, %.2f, %.2f )", mac, light, pressure, temperature, humidity);
   sprintf(INSERT_SQL, "%s %s", INSERT_syn, INSERT_val);
 }
