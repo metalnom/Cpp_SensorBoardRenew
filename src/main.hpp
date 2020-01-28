@@ -12,7 +12,7 @@
 IPAddress server_addr(192,168,10,156);
 char user[] = "node";
 char password[] = "node";
-char INSERT_syn[] = "insert into test.sensor (light, pre, tem, hum) values";
+char INSERT_syn[] = "insert into test.sensor (mac, light, pre, tem, hum) values";
 char INSERT_val[100];
 char INSERT_SQL[150];
 
@@ -32,6 +32,9 @@ float temperature = 0.0;
 
 DHT HumiditySensor(D5, DHT11);
 float humidity = 0.0;
+
+String devmac;
+char mac[20];
 
 void wifi_set(void);
 void getTextTime(time_t now);

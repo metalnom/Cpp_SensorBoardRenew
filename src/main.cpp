@@ -19,8 +19,8 @@ void loop() {
   humidity = HumiditySensor.readHumidity();
   console_print(now);
   insert_mod();
-  // Serial.println(INSERT_SQL);
-  cursor->execute(INSERT_SQL); 
+  Serial.println(INSERT_SQL);
+  // cursor->execute(INSERT_SQL); 
 }
 
 
@@ -34,6 +34,8 @@ void wifi_set(void) {
   Serial.println("\nConnected to network");
   Serial.print("My IP address is: ");
   Serial.println(WiFi.localIP());
+  devmac = WiFi.macAddress();
+  devmac.toCharArray(mac, devmac.length()+1);
 
   Serial.print("Connecting to SQL...  ");
   if (conn.connect(server_addr, 3306, user, password))
@@ -68,6 +70,6 @@ void console_print(time_t t) {
 }
 
 void insert_mod() {
-  sprintf(INSERT_val, "( %.2f, %.2f, %.2f, %.2f )", light, pressure, temperature, humidity);
+  sprintf(INSERT_val, "( %s, %.2f, %.2f, %.2f, %.2f )", mac, light, pressure, temperature, humidity);
   sprintf(INSERT_SQL, "%s %s", INSERT_syn, INSERT_val);
 }
