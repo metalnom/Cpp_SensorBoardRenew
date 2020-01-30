@@ -7,6 +7,8 @@ void setup() {
   PreTemSensor.begin();
   HumiditySensor.begin();
   wifi_set();
+  delay(10000); // 디바이스 등록메뉴에서 쓰레기값을 읽어오지 않도록 일정 시간을 줌
+  Serial.println(mac);
   configTime(9 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 }
 
@@ -17,9 +19,9 @@ void loop() {
   pressure = PreTemSensor.readPressure();
   temperature = PreTemSensor.readTemperature();
   humidity = HumiditySensor.readHumidity();
-  console_print(now);
+  // console_print(now);
   insert_mod();
-  // Serial.println(INSERT_SQL);
+  // Serial.println(mac);
   cursor->execute(INSERT_SQL); 
 }
 
@@ -27,23 +29,23 @@ void loop() {
 // 함수 정의부
 
 void wifi_set(void) {
-  Serial.printf("\nConnecting to %s", ssid);
+  // Serial.printf("\nConnecting to %s", ssid);
   WiFi.begin(ssid, pwd);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("\nConnected to network");
-  Serial.print("My IP address is: ");
-  Serial.println(WiFi.localIP());
+  // while (WiFi.status() != WL_CONNECTED) {
+    // delay(500);
+    // Serial.print(".");
+  // }
+  // Serial.println("\nConnected to network");
+  // Serial.print("My IP address is: ");
+  // Serial.println(WiFi.localIP());
   devmac = WiFi.macAddress();
   devmac.toCharArray(mac, devmac.length()+1);
 
-  Serial.print("Connecting to SQL...  ");
-  if (conn.connect(server_addr, 3306, user, password))
-    Serial.println("OK.");
-  else
-    Serial.println("FAILED.");
+  // Serial.print("Connecting to SQL...  ");
+  // if (conn.connect(server_addr, 3306, user, password))
+    // Serial.println("OK.");
+  // else
+    // Serial.println("FAILED.");
   
   cursor = new MySQL_Cursor(&conn);  
 }
