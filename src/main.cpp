@@ -19,9 +19,8 @@ void loop() {
   pressure = PreTemSensor.readPressure();
   temperature = PreTemSensor.readTemperature();
   humidity = HumiditySensor.readHumidity();
-  // console_print(now);
+  getTime(now);
   insert_mod();
-  // Serial.println(mac);
   cursor->execute(INSERT_SQL); 
 }
 
@@ -29,17 +28,19 @@ void loop() {
 // 함수 정의부
 
 void wifi_set(void) {
-  // Serial.printf("\nConnecting to %s", ssid);
+  Serial.printf("\nConnecting to %s", ssid);
   WiFi.begin(ssid, pwd);
-  // while (WiFi.status() != WL_CONNECTED) {
-    // delay(500);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
     // Serial.print(".");
-  // }
+  }
   // Serial.println("\nConnected to network");
   // Serial.print("My IP address is: ");
   // Serial.println(WiFi.localIP());
   devmac = WiFi.macAddress();
   devmac.toCharArray(mac, devmac.length()+1);
+  
+  conn.connect(server_addr, 3306, user, password);
 
   // Serial.print("Connecting to SQL...  ");
   // if (conn.connect(server_addr, 3306, user, password))
@@ -50,17 +51,19 @@ void wifi_set(void) {
   cursor = new MySQL_Cursor(&conn);  
 }
 
-void getTextTime(time_t now) {
+void getTime(time_t now) {
   struct tm *timeinfo;
   timeinfo = localtime(&now);
-  String text = "Y:" + String(timeinfo->tm_year+1900) + " M:" + String(timeinfo->tm_mon+1) + " D:" \
-                + String(timeinfo->tm_mday) + "  " + String(timeinfo->tm_hour) + ":" \
-                + String(timeinfo->tm_min) + ":" + String(timeinfo->tm_sec);
-  Serial.println(text);
+  year = timeinfo->tm_year + 1900;
+  month = timeinfo->tm_mon + 1;
+  day = timeinfo->tm_mday;
+  // String text = "Y:" + String(timeinfo->tm_year+1900) + " M:" + String(timeinfo->tm_mon+1) + " D:" \
+                // + String(timeinfo->tm_mday) + "  " + String(timeinfo->tm_hour) + ":" \
+                // + String(timeinfo->tm_min) + ":" + String(timeinfo->tm_sec);
+  // Serial.println(text);
 }
 
 void console_print(time_t t) {
-  getTextTime(t);
   Serial.println("-------------------------");
   Serial.print("LIGHT:\t\t");
   Serial.println(light);
@@ -74,6 +77,7 @@ void console_print(time_t t) {
 }
 
 void insert_mod() {
-  sprintf(INSERT_val, "( '%s', %.2f, %.2f, %.2f, %.2f )", mac, light, pressure, temperature, humidity);
+  sprintf(INSERT_val, "( '%s', %.2f, %.2f, %.2f, %.2f, %d, %d, %d )", mac, light, pressure, temperature, humidity, year, month, day);
   sprintf(INSERT_SQL, "%s %s", INSERT_syn, INSERT_val);
+  // Serial.println(INSERT_SQL);
 }
