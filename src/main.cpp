@@ -32,22 +32,11 @@ void wifi_set(void) {
   WiFi.begin(ssid, pwd);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    // Serial.print(".");
   }
-  // Serial.println("\nConnected to network");
-  // Serial.print("My IP address is: ");
-  // Serial.println(WiFi.localIP());
   devmac = WiFi.macAddress();
   devmac.toCharArray(mac, devmac.length()+1);
   
   conn.connect(server_addr, 3306, user, password);
-
-  // Serial.print("Connecting to SQL...  ");
-  // if (conn.connect(server_addr, 3306, user, password))
-    // Serial.println("OK.");
-  // else
-    // Serial.println("FAILED.");
-  
   cursor = new MySQL_Cursor(&conn);  
 }
 
@@ -57,27 +46,9 @@ void getTime(time_t now) {
   year = timeinfo->tm_year + 1900;
   month = timeinfo->tm_mon + 1;
   day = timeinfo->tm_mday;
-  // String text = "Y:" + String(timeinfo->tm_year+1900) + " M:" + String(timeinfo->tm_mon+1) + " D:" \
-                // + String(timeinfo->tm_mday) + "  " + String(timeinfo->tm_hour) + ":" \
-                // + String(timeinfo->tm_min) + ":" + String(timeinfo->tm_sec);
-  // Serial.println(text);
-}
-
-void console_print(time_t t) {
-  Serial.println("-------------------------");
-  Serial.print("LIGHT:\t\t");
-  Serial.println(light);
-  Serial.print("PRESSURE:\t");
-  Serial.println(pressure);
-  Serial.print("TEMPERATURE:\t");
-  Serial.println(temperature);
-  Serial.print("HUMIDITY:\t");
-  Serial.println(humidity);
-  Serial.println("=========================");
 }
 
 void insert_mod() {
   sprintf(INSERT_val, "( '%s', %.2f, %.2f, %.2f, %.2f, %d, %d, %d )", mac, light, pressure, temperature, humidity, year, month, day);
   sprintf(INSERT_SQL, "%s %s", INSERT_syn, INSERT_val);
-  // Serial.println(INSERT_SQL);
 }

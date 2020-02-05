@@ -49,6 +49,4 @@ int day;
 
 // 함수 선언
 void wifi_set(void);
-void getTime(time_t now);
-void console_print(time_t t);
 void insert_mod(void);
