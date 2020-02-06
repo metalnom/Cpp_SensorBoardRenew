@@ -15,7 +15,7 @@ char user[] = "node";
 char password[] = "node";
 
 // 데이터베이스 insert query 설정
-char INSERT_syn[] = "insert into test.sensor (mac, light, pre, tem, hum, year, month, day) values";
+char INSERT_syn[] = "insert into test.sensor (mac, light, pre, tem, hum, year, month, day, hour, min, sec) values";
 char INSERT_val[100];
 char INSERT_SQL[150];
 
@@ -42,11 +42,15 @@ float humidity = 0.0;
 String devmac;
 char mac[20];
 
-// 센서값 입력 일자 변수 선언
+// 센서값 입력 일시 변수 선언
 int year;
 int month;
 int day;
+int t_hour;
+int t_min;
+int t_sec;
 
 // 함수 선언
 void wifi_set(void);
 void insert_mod(void);
+void getTime(time_t);

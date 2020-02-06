@@ -46,9 +46,13 @@ void getTime(time_t now) {
   year = timeinfo->tm_year + 1900;
   month = timeinfo->tm_mon + 1;
   day = timeinfo->tm_mday;
+  t_hour = timeinfo->tm_hour;
+  t_min = timeinfo->tm_min;
+  t_sec = timeinfo->tm_sec;
 }
 
 void insert_mod() {
-  sprintf(INSERT_val, "( '%s', %.2f, %.2f, %.2f, %.2f, %d, %d, %d )", mac, light, pressure, temperature, humidity, year, month, day);
+  sprintf(INSERT_val, "( '%s', %.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %d, %d )", \ 
+          mac, light, pressure, temperature, humidity, year, month, day, t_hour, t_min, t_sec);
   sprintf(INSERT_SQL, "%s %s", INSERT_syn, INSERT_val);
 }
