@@ -8,7 +8,7 @@ void setup() {
   HumiditySensor.begin();
   wifi_set();
   delay(10000); // 디바이스 등록메뉴에서 쓰레기값을 읽어오지 않도록 일정 시간을 줌
-  Serial.println(mac);
+  Serial.print(mac);
   configTime(9 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 }
 
@@ -21,6 +21,7 @@ void loop() {
   humidity = HumiditySensor.readHumidity();
   getTime(now);
   insert_mod();
+  // Serial.println(INSERT_SQL);
   cursor->execute(INSERT_SQL); 
 }
 
