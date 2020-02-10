@@ -55,3 +55,4 @@ void wifi_set(void);
 void insert_mod(void);
 void getTime(time_t);
 
+char msg[100];

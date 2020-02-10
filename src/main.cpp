@@ -25,9 +25,12 @@ void loop() {
   humidity = HumiditySensor.readHumidity();
   getTime(now);
   insert_mod();
-  Serial.println(INSERT_SQL);
+  cursor = new MySQL_Cursor(&conn);
+  // Serial.println(INSERT_SQL);
   cursor->execute(INSERT_SQL); 
-
+  cursor->close();
+  // conn.show_error(msg);
+  // Serial.println(msg);
   digitalWrite(D6, HIGH);
   delay(200);
   digitalWrite(D6, LOW);
@@ -37,7 +40,6 @@ void loop() {
 // 함수 정의부
 
 void wifi_set(void) {
-  // Serial.printf("\nConnecting to %s", ssid);
   WiFi.begin(ssid, pwd);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -61,7 +63,7 @@ void getTime(time_t now) {
 }
 
 void insert_mod() {
-  sprintf(INSERT_val, "( '%s', %.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %d, %d )", \ 
+  sprintf(INSERT_val, "( '%s', %.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %d, %d )", \
           mac, light, pressure, temperature, humidity, year, month, day, t_hour, t_min, t_sec);
   sprintf(INSERT_SQL, "%s %s", INSERT_syn, INSERT_val);
 }
