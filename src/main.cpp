@@ -28,7 +28,7 @@ void loop() {
 // 함수 정의부
 
 void wifi_set(void) {
-  Serial.printf("\nConnecting to %s", ssid);
+  // Serial.printf("\nConnecting to %s", ssid);
   WiFi.begin(ssid, pwd);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
