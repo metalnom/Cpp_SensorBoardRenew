@@ -2,36 +2,32 @@
 
 void setup() {
   pinMode(D6, OUTPUT);
-  digitalWrite(D6, HIGH);
+  digitalWrite(D6, HIGH);             // 초기 셋팅 중 LED 켜짐
 
   Serial.begin(9600);
   Wire.begin();
   LightSensor.begin(BH1750::CONTINUOUS_HIGH_RES_MODE);
   PreTemSensor.begin();
   HumiditySensor.begin();
-  wifi_set();
-  delay(10000); // 디바이스 등록메뉴에서 쓰레기값을 읽어오지 않도록 일정 시간을 줌
+  
+  readData();                         // 초기화 후 첫번째 값은 버림(ex 조도값은 첫번째 값이 0이 나오는 경우가 있음
+  wifi_set();                         // 와이파이 셋팅
+  delay(10000);                       // 디바이스 등록메뉴에서 쓰레기값을 읽어오지 않도록 일정 시간을 줌
   Serial.print(mac);
   configTime(9 * 3600, 0, "pool.ntp.org", "time.nist.gov");
   digitalWrite(D6, LOW);
 }
 
 void loop() {
-  delay(29800);     // 데이터베이스 업데이트 주기
+  delay(29800);                       // 데이터베이스 업데이트 주기
   time_t now = time(nullptr);
-  light = LightSensor.readLightLevel();
-  pressure = PreTemSensor.readPressure();
-  temperature = PreTemSensor.readTemperature();
-  humidity = HumiditySensor.readHumidity();
-  getTime(now);
-  insert_mod();
+  readData();                         // 센서값 읽어옴
+  getTime(now);                       // 현재 일시를 받아옴
+  insert_mod();                       // insert query 셋팅
   cursor = new MySQL_Cursor(&conn);
-  // Serial.println(INSERT_SQL);
   cursor->execute(INSERT_SQL); 
   cursor->close();
-  // conn.show_error(msg);
-  // Serial.println(msg);
-  digitalWrite(D6, HIGH);
+  digitalWrite(D6, HIGH);             // sql실행 후 1회 깜빡임
   delay(200);
   digitalWrite(D6, LOW);
 }
@@ -66,4 +62,11 @@ void insert_mod() {
   sprintf(INSERT_val, "( '%s', %.2f, %.2f, %.2f, %.2f, %d, %d, %d, %d, %d, %d )", \
           mac, light, pressure, temperature, humidity, year, month, day, t_hour, t_min, t_sec);
   sprintf(INSERT_SQL, "%s %s", INSERT_syn, INSERT_val);
+}
+
+void readData() {
+  light = LightSensor.readLightLevel();
+  pressure = PreTemSensor.readPressure();
+  temperature = PreTemSensor.readTemperature();
+  humidity = HumiditySensor.readHumidity();
 }
