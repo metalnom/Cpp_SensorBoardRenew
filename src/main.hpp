@@ -55,3 +55,5 @@ void wifi_set(void);
 void insert_mod(void);
 void getTime(time_t);
 void readData(void);
+
+int count;

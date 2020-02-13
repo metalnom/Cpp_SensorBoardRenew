@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 void setup() {
+  count = 0;
   pinMode(D6, OUTPUT);
   digitalWrite(D6, HIGH);             // 초기 셋팅 중 LED 켜짐
 
@@ -19,7 +20,7 @@ void setup() {
 }
 
 void loop() {
-  delay(29800);                       // 데이터베이스 업데이트 주기
+  delay(59800);                       // 데이터베이스 업데이트 주기(1분))
   time_t now = time(nullptr);
   readData();                         // 센서값 읽어옴
   getTime(now);                       // 현재 일시를 받아옴
@@ -30,6 +31,9 @@ void loop() {
   digitalWrite(D6, HIGH);             // sql실행 후 1회 깜빡임
   delay(200);
   digitalWrite(D6, LOW);
+
+  count++;
+  if(count == 59) ESP.reset();        // 1시간 간격 reset
 }
 
 
